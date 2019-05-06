@@ -1,0 +1,13 @@
+#!/bin/bash
+
+TF_ROOT="/opt/TF_ROOT/"
+
+nvidia-docker run -it \
+-p 8889:8888 \
+-v `realpath .`:$TF_ROOT \
+-v `realpath ../../../osie_dataset`:$TF_ROOT/osie_dataset \
+-v `realpath ../../../stimuli_BMVC`:$TF_ROOT/stimuli_BMVC \
+-v `realpath ../../../stimuli_oddoneout`:$TF_ROOT/stimuli_oddoneout \
+--rm \
+-w $TF_ROOT \
+salicontf python3 src/finetune_SALICON.py osie+psychosal

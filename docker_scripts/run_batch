@@ -1,0 +1,73 @@
+#!/bin/bash
+
+TF_ROOT="/opt/TF_ROOT/"
+INPUT_VOLUME="/opt/input_dir"
+OUTPUT_VOLUME="/opt/output_dir"
+
+input_dir=""
+output_dir=""
+model_file=""
+
+usage() {
+    echo "Usage: $0 -i input_dir -o output_dir -w model_file"
+}
+
+while getopts "h?i:o:w:l:" opt; do
+    case "$opt" in
+        h|\?)
+            usage
+            exit 0
+            ;;
+        i)  input_dir=$OPTARG
+            ;;
+        o)  output_dir=$OPTARG
+            ;;
+        w)  model_file=$OPTARG
+            ;;
+        esac
+done
+
+shift "$((OPTIND-1))"
+
+if [-z "$model_file" ]; then
+    echo "ERROR: model_file has not been provided!"
+    usage
+    exit 1
+fi
+
+if [ -z "$input_dir" ]; then
+    echo "ERROR: input_dir has not been provided!"
+    usage
+    exit 1
+fi
+
+if [ -z "$output_dir" ]; then
+    echo "ERROR: output_dir has not been provided"
+    usage
+    exit 1
+fi
+
+input_dir=`realpath "$input_dir"`
+output_dir=`realpath "$output_dir"`
+
+if [ ! -d "$input_dir" ]; then
+    echo "ERROR: $input_dir does not exist!"
+    usage
+    exit 2
+fi
+
+if [ ! -d "$output_dir" ]; then
+    echo "WARNING: $output_dir does not exist, will create it"
+    mkdir -p $output_dir
+fi
+
+
+ nvidia-docker run -it \
+-p 8890:8888 \
+-v `realpath .`:$TF_ROOT \
+--rm \
+-w $TF_ROOT \
+--volume ${input_dir}:${INPUT_VOLUME} \
+--volume ${output_dir}:${OUTPUT_VOLUME} \
+--volume `realpath ./models`:${TF_ROOT}/models \
+salicontf python3 src/run_SALICON.py -w ${model_file} -i ${INPUT_VOLUME} -o ${OUTPUT_VOLUME}
