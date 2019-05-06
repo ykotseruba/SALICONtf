@@ -23,18 +23,7 @@ from PIL import Image
 from scipy.misc import imsave
 
 
-
-#from saliency_eval import auc_judd, kldiv, normalize_map
-
-def step_decay(epoch):
-    initial_lrate = 0.000001
-    drop = 0.1
-    epochs_drop = 3
-    lrate = initial_lrate * math.pow(drop, math.floor((1+epoch)/epochs_drop))
-    return lrate
-
-
-def data():
+def get_data():
     osie_dir = 'osie_dataset/data/'
     osie_stimuli = osie_dir + 'stimuli'
     osie_labels = osie_dir + 'fixation_maps'
@@ -54,8 +43,9 @@ def data():
 
 
 class SALICON():
-    def __init__(self, weights='', activation='sigmoid'):
-        self.build_salicon_model(activation=activation)
+    def __init__(self, weights=''):
+        self.build_salicon_model()
+        #load weights if provided
         if weights:
           self.model.load_weights(weights)
 
@@ -152,7 +142,7 @@ class SALICON():
         return model.input, model.output
 
 
-    def build_salicon_model(self, activation='sigmoid'):
+    def build_salicon_model(self):
         #create two streams separately
         fine_stream_input, fine_stream_output = self.build_vgg16(input_shape=(600, 800, 3), stream_type='fine')
         coarse_stream_input, coarse_stream_output = self.build_vgg16(input_shape=(300, 400, 3), stream_type='coarse')
@@ -164,27 +154,15 @@ class SALICON():
         #add concatenation layer followed by 1x1 convolution to combine streams
         concat_layer = layers.concatenate([fine_stream_output, interp_layer], axis=-1)
 
-        if activation == 'sigmoid':
-          sal_map_layer = layers.Conv2D(1, (1, 1),
-                          name='saliency_map',
-                          trainable=True,
-                          activation=activation,
-                          kernel_initializer=keras.initializers.Zeros(),
-                          bias_initializer=keras.initializers.Zeros())(concat_layer)
-        else:
-          conv2d_layer = layers.Conv2D(1, (1, 1),
-                          name='saliency_map',
-                          trainable=True,
-                          kernel_initializer=keras.initializers.Zeros(),
-                          bias_initializer=keras.initializers.Zeros())(concat_layer)         
-          flatten_layer = layers.Flatten()(conv2d_layer)
-          sal_map_layer = layers.Activation('softmax')(flatten_layer)
-
+        sal_map_layer = layers.Conv2D(1, (1, 1),
+                        name='saliency_map',
+                        trainable=True,
+                        activation='sigmoid',
+                        kernel_initializer=keras.initializers.Zeros(),
+                        bias_initializer=keras.initializers.Zeros())(concat_layer)
 
         self.model = Model(inputs=[fine_stream_input, coarse_stream_input], outputs=sal_map_layer)
-        #plot_model(self.model, to_file='model.png', show_shapes=True, show_layer_names=True)
         self.model.summary()
-        #self.model.save('SALICON_untrained.h5')
         
     def compute_saliency(self, img_path):
         vgg_mean = np.array([123, 116, 103])
@@ -217,26 +195,6 @@ class SALICON():
 
         return smap
 
-    def test_model(self, img_list, img_dir='', out_dir=''):
-
-      if not os.path.exists(out_dir):
-          os.makedirs(out_dir)
-      print(img_dir, out_dir)
-      for img_name in img_list:
-          print(join(out_dir, os.path.basename(img_name)))
-          smap = self.compute_saliency(join(img_dir, img_name))
-          imsave(join(out_dir, os.path.basename(img_name)), smap)
-
-
-    def plot_history(self):
-        # summarize history for loss
-        plt.plot(self.history.history['loss'])
-        plt.plot(self.history.history['val_loss'])
-        plt.title('model loss')
-        plt.ylabel('loss')
-        plt.xlabel('epoch')
-        plt.legend(['train', 'test'], loc='upper left')
-        plt.savefig('models/'+self.model_name+'_loss.png')
 
 
 if __name__ == "__main__":

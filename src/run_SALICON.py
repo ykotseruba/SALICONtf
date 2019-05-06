@@ -29,11 +29,7 @@ def main(argv):
 
     images = [f for f in listdir(img_dir) if isfile(join(img_dir, f))]
 
-    if 'kldiv' in model_weights:
-        activation = 'softmax'
-    else:
-        activation = 'sigmoid'
-    s = SALICON(model_weights, activation=activation)
+    s = SALICON(model_weights)
 
     for img_name in images:
         smap = s.compute_saliency(join(img_dir, img_name))
