@@ -16,6 +16,9 @@ In the original formulation the best results were achieved by optimizing the Kul
 
 The model is trained on the OSIE dataset, which we split into training set of 630 images and validation set of 70 images. Batch size is set to 1. We evaluate the model on MIT1003 dataset. The results in the table below show that our model achieves results closest to the official SALICON demo results. The model runs at ≈ 5 FPS on the NVIDIA Titan X GPU.
 
+
+Below are the results of our model compared to the [official SALICON demo](http://salicon.net/demo/) and [OpenSALICON](https://github.com/CLT29/OpenSALICON). We evaluate all models on [MIT1003 dataset](http://people.csail.mit.edu/tjudd/WherePeopleLook/index.html) using [MIT benchmark code](https://github.com/cvzoya/saliency) to compute common metrics.
+
 |                       |          |      | MIT1003 |      |      |
 |-----------------------|----------|------|---------|------|------|
 |         model         | AUC_Judd | CC   | KLDiv   | NSS  | SIM  |
