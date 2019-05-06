@@ -37,3 +37,57 @@ def get_osie_data():
     return X_train, Y_train, X_val, Y_val
 
 #    return [fine_image_data, coarse_image_data], label_data
+
+#assuming that the dataset structure is as follows
+#dataset_root
+#--> stimuli_dir
+#--> fixation_maps_dir
+#
+# stimuli_dir and fixation_maps_dir should be provided as relative paths to dataset_root
+# by default all loaded data will be saved into cache
+def import_train_data(dataset_root, stimuli_dir, fixation_maps_dir, use_cache=True):
+
+    if use_cache:
+        cache_dir = join(dataset_root, '__cache')
+        if not isdir(cache_dir):
+            mkdir(cache_dir)
+
+        if isfile(join(cache_dir, 'data.npy')):
+            fine_image_data, coarse_image_data, label_data = np.load(join(cache_dir, 'data.npy'))
+            return fine_image_data, coarse_image_data, label_data
+
+    image_names = [f for f in listdir(join(dataset_root, stimuli_dir)) if isfile(join(dataset_root, stimuli_dir , f))]
+    #shuffle(image_names)
+
+    fine_image_data = np.zeros((len(image_names), 600, 800, 3), dtype=np.float32)
+    coarse_image_data = np.zeros((len(image_names), 300, 400, 3), dtype=np.float32)
+    label_data = np.zeros((len(image_names), 37, 50, 1), dtype=np.float32)
+    #label_data = np.zeros((len(image_names), 37*50), dtype=np.float32)
+
+    for i in range(len(image_names)):
+        img_fine = img_to_array(load_img(join(dataset_root, stimuli_dir, image_names[i]),
+            grayscale=False,
+            target_size=(600, 800),
+            interpolation='nearest'))
+        img_coarse = img_to_array(load_img(join(dataset_root, stimuli_dir, image_names[i]),
+            grayscale=False,
+            target_size=(300, 400),
+            interpolation='nearest'))
+        label = img_to_array(load_img(join(dataset_root, fixation_maps_dir, image_names[i]),
+            grayscale=True,
+            target_size=(37, 50),
+            interpolation='nearest'))
+
+        img_fine -= vgg_mean
+        img_coarse -= vgg_mean
+
+        fine_image_data[i] = img_fine[None, :]/255
+        coarse_image_data[i] = img_coarse[None, :]/255
+        label_data[i] = label[None, :]/255
+        # label = np.ndarray.flatten(label/255)
+        # label_data[i] = np.exp(label)/np.sum(np.exp(label))
+
+    if use_cache:
+        np.save(join(cache_dir, 'data.npy'), (fine_image_data, coarse_image_data, label_data))
+
+    return fine_image_data, coarse_image_data, label_data
