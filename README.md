@@ -1,13 +1,16 @@
 # SALICONtf
+
 This repository contains the code to train and run SALICONtf - the reimplementation of bottom-up saliency model SALICON in TensorFlow.
 
-##Implementation
+## Implementation
+
 In our implementation we follow the original [CVPR'15 paper](https://www.cv-foundation.org/openaccess/content_iccv_2015/papers/Huang_SALICON_Reducing_the_ICCV_2015_paper.pdf) with several minor changes.
 
 As in the original paper, SALICONtf model contains two VGG-based streams (without fc layers) for fine- and coarse-scale processing. Input is resized to 600x800px and 300x400px for fine and corase streams respectively. The final layer of the fine stream is resized to match the sie of the coarse stream (30x57px). Both outputs are concatenated and convolved with
 1×1 filter. The labels (human fixation maps) are resized to 37×50 to match the output of the network.
 
-##Training
+## Training
+
 In the original formulation the best results were achieved by optimizing the Kullback-Leibler divergence (KLD) loss. In our experiments with SALICONtf we obtained better results using the binary cross-entropy loss as in [13]. We use fixed learning rate of 0.01 , momentum of 0.9 and weight decay of 0.0005. The original paper did not specify the number of training epochs and only mentioned that between 1 and 2 hours is required to train the model. Our implementation achieves reasonable results after 100 epochs and reaches its top perfomance on MIT1003 dataset after 300 epochs (which takes approx. 12 hours of training).
 
 
@@ -22,24 +25,7 @@ The model is trained on the OSIE dataset, which we split into training set of 63
 
 
 
-## Behavioral annotations
-This data is produced using BORIS 2 (http://www.boris.unito.it) - event logging software for video observations. We provide both the BORIS files in the original tsv text format and xml format.
 
-Each file contains the name of the video file (e.g. video_0001.mp4), independent variables and timestamped observations.
-The following types of tags and their possible values are defined for each video:
-
-1. location		(indoor/plaza/street)  indoor refers to parking, plaza to outdoor parking (e.g. near mall)
-
-2.	weather  	(cloudy/clear/rain/snow)   n/a is set for indoor
-
-3. time_of_day	 (daytime/nighttime) 	n/a for indoor
-
-4. road_condition (snow/rain/dry)	whether the road surface is covered in snow/water or is dry..
-
-The following behaviors are defined for all subjects: clear path, crossing, handwave, look, looking, moving fast, moving slow, walking, nod, signal, slow down, speed up, standing, stopped. Some actions are capitalized to distinguish actions that happen on the road vs actions on the sidewalk (e.g. STANDING means that the pedestrian is standing on the road beyond the curb).  
-
-Behavioral data can be downloaded in the original BORIS tsv format and xml.  
-Below is an example of behavioral data in xml format.
 
 ```
 xml
