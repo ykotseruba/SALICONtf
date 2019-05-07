@@ -42,7 +42,7 @@ def get_data():
     return X_train, Y_train, X_val, Y_val
 
 
-class SALICON():
+class SALICONtf():
     def __init__(self, weights=''):
         self.build_salicon_model()
         #load weights if provided

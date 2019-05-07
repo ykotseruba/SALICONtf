@@ -4,7 +4,7 @@ from os import listdir, makedirs
 from os.path import isfile, join
 import sys, getopt
 
-from SALICON import SALICON
+from SALICONtf import SALICONtf
 
 
 def main(argv):
@@ -29,7 +29,7 @@ def main(argv):
 
     images = [f for f in listdir(img_dir) if isfile(join(img_dir, f))]
 
-    s = SALICON(model_weights)
+    s = SALICONtf(model_weights)
 
     for img_name in images:
         smap = s.compute_saliency(join(img_dir, img_name))

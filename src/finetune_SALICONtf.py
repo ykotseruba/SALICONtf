@@ -4,13 +4,13 @@ from tensorflow import keras
 from tensorflow.keras import layers, optimizers
 from tensorflow.keras.models import load_model
 from data_utils import *
-from SALICON import *
+from SALICONtf import *
 import math
 import pickle
 import os
 
 def create_model(learn_rate, momentum, decay, loss='crossentropy'):
-    model = SALICON(activation='sigmoid').model
+    model = SALICONtf(activation='sigmoid').model
     loss_fn = keras.losses.binary_crossentropy
 
     sgd = keras.optimizers.SGD(lr=learn_rate, momentum=momentum, decay=decay, nesterov=True)
