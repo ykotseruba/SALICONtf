@@ -1,5 +1,8 @@
 FROM tensorflow/tensorflow:1.13.0rc1-gpu-py3
 
+
+ENV TF_ROOT=/opt/TF_ROOT/
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
 python3-tk \
 python3-pydot \

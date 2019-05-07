@@ -12,7 +12,7 @@ usage() {
     echo "Usage: $0 -i input_dir -o output_dir -w model_file"
 }
 
-while getopts "h?i:o:w:l:" opt; do
+while getopts "h?i:o:w:" opt; do
     case "$opt" in
         h|\?)
             usage
@@ -29,7 +29,7 @@ done
 
 shift "$((OPTIND-1))"
 
-if [-z "$model_file" ]; then
+if [ -z "$model_file" ]; then
     echo "ERROR: model_file has not been provided!"
     usage
     exit 1
@@ -48,7 +48,8 @@ if [ -z "$output_dir" ]; then
 fi
 
 input_dir=`realpath "$input_dir"`
-output_dir=`realpath "$output_dir"`
+
+echo $output_dir
 
 if [ ! -d "$input_dir" ]; then
     echo "ERROR: $input_dir does not exist!"
@@ -67,7 +68,8 @@ fi
 -v `realpath .`:$TF_ROOT \
 --rm \
 -w $TF_ROOT \
+-v `realpath src/`:$TF_ROOT/src/ \
 --volume ${input_dir}:${INPUT_VOLUME} \
---volume ${output_dir}:${OUTPUT_VOLUME} \
+--volume `realpath "$output_dir"`:${OUTPUT_VOLUME} \
 --volume `realpath ./models`:${TF_ROOT}/models \
 salicontf python3 src/run_SALICON.py -w ${model_file} -i ${INPUT_VOLUME} -o ${OUTPUT_VOLUME}

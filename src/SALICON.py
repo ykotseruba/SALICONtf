@@ -136,9 +136,13 @@ class SALICON():
         model = Model(inputs=img_input, outputs=x)
 
         #initialize each vgg16 stream with ImageNet weights
-        model.load_weights('data/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5', by_name=False)
-        model = Model(inputs=img_input, outputs=output)
-        #plot_model(model, to_file='model.png', show_shapes=True, show_layer_names=True)
+        try:
+          model.load_weights('models/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5', by_name=False)
+          model = Model(inputs=img_input, outputs=output)
+          #plot_model(model, to_file='model.png', show_shapes=True, show_layer_names=True)
+        except OSError:
+          print("ERROR: VGG weights are not found.\nRun download_vgg_weights.sh in models/ directory")
+          sys.exit(-1)
         return model.input, model.output
 
 
