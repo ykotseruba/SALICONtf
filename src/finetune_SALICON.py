@@ -17,7 +17,7 @@ def create_model(learn_rate, momentum, decay, loss='crossentropy'):
     model.compile(loss=loss_fn, optimizer=sgd, metrics=['accuracy', 'mae'])
     return model
 
-def finetune(dataset='osie', learn_rate=0.01, loss='crossentropy', num_epochs=500):
+def finetune(learn_rate=0.01, loss='crossentropy', num_epochs=500):
 
     X_train, Y_train, X_val, Y_val = get_osie_data()
 
@@ -37,8 +37,6 @@ def finetune(dataset='osie', learn_rate=0.01, loss='crossentropy', num_epochs=50
     return model_name, model
 
 
-def main(dataset):
-    model_name, model = finetune(dataset)
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    model_name, model = finetune()

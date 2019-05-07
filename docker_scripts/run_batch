@@ -6,7 +6,7 @@ OUTPUT_VOLUME="/opt/output_dir"
 
 input_dir=""
 output_dir=""
-model_file=""
+model_file="models/model_lr0.01_loss_crossentropy.h5"
 
 usage() {
     echo "Usage: $0 -i input_dir -o output_dir -w model_file"
