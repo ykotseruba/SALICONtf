@@ -2,6 +2,11 @@
 
 This repository contains the code to train and run SALICONtf - the reimplementation of bottom-up saliency model SALICON in TensorFlow.
 
+- [Implementation](#implementation)
+- [Installation instructions](#installation)
+- [Running SALICONtf](#running-salicontf-with-pretrained-weights)
+- [Training SALICONtf](#finetuning-salicontf)
+
 ## Implementation
 
 ### Architecture
@@ -59,13 +64,12 @@ sh download_pretrained_weights.sh
 sh download_vgg_weights.sh
 ```
 
-Download OSIE dataset if you want to train SALICON. We provide fixation maps for the OSIE which are generated from human fixation points (```osie_dataset/data/eye/fixations.mat```) using the MATLAB script ```generate_osie_fixation_maps.m```. In case you want to change the way these maps are generated, feel free to modify the script and rerun it on osie data.
+Download OSIE dataset if you want to train SALICON. We provide fixation maps for the OSIE dataset which are generated from human fixation points (```osie_dataset/data/eye/fixations.mat```) using the MATLAB script ```generate_osie_fixation_maps.m```. 
 
 ```
 cd osie_dataset
 sh download_osie_dataset.sh
 ```
-
 
 Download MIT1003 dataset used for evaluation (optional).
 ```
@@ -73,8 +77,8 @@ cd mit1003_dataset
 sh download_mit1003.sh
 ```
 
-### Running with pretrained weights
-To run a pretrained SALICONtf on an arbitrary directory use the docker script:
+### Running SALICONtf with pretrained weights
+To run a pretrained SALICONtf on an arbitrary image directory use the docker script:
 ```
 sh docker_scripts/run_batch 
 ```
@@ -87,8 +91,8 @@ python3 src/run_SALICON.py -i <input_dir> -o <output_dir> [-w <model_weights>]
 ```input_dir``` and ```output_dir``` are the input and output directories respectively. If the output directory does not exist, it will be created. If no ```model_weights``` are provided, the pretrained model ```models/model_lr0.01_loss_crossentropy.h5``` will be used.
 
 
-### Finetuning the model
-To train SALICONtf on the original OSIE data using docker script:
+### Finetuning SALICONtf
+To finetune SALICONtf on the original OSIE data using docker script:
 
 ```
 sh docker_scripts/finetune
