@@ -32,7 +32,7 @@ def main(argv):
     s = SALICONtf(model_weights)
 
     for img_name in images:
-        smap = s.compute_saliency(join(img_dir, img_name))
+        smap = s.compute_saliency(img_path=join(img_dir, img_name))
         imsave(join(out_dir, img_name), smap)
 
 

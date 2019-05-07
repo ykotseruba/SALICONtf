@@ -19,7 +19,6 @@ from tensorflow.python.ops import math_ops
 import matplotlib.pyplot as plt
 from data_utils import import_train_data
 import keras.backend as K
-from PIL import Image
 from scipy.misc import imsave
 
 
@@ -168,18 +167,23 @@ class SALICONtf():
         self.model = Model(inputs=[fine_stream_input, coarse_stream_input], outputs=sal_map_layer)
         self.model.summary()
         
-    def compute_saliency(self, img_path):
+    def compute_saliency(self, img_path=None, img=None):
         vgg_mean = np.array([123, 116, 103])
 
-        img_fine = img_to_array(load_img(img_path,
-            grayscale=False,
-            target_size=(600, 800),
-            interpolation='nearest'))
+        if img_path:
+          img_fine = img_to_array(load_img(img_path,
+              grayscale=False,
+              target_size=(600, 800),
+              interpolation='nearest'))
 
-        img_coarse = img_to_array(load_img(img_path,
-            grayscale=False,
-            target_size=(300, 400),
-            interpolation='nearest'))
+          img_coarse = img_to_array(load_img(img_path,
+              grayscale=False,
+              target_size=(300, 400),
+              interpolation='nearest'))
+
+        else:
+          img_fine = img.copy().resize((600, 800))
+          img_coarse = img.copy().resize((300, 400))
 
         img_fine -= vgg_mean
         img_coarse -= vgg_mean
@@ -188,13 +192,15 @@ class SALICONtf():
         img_coarse = img_coarse[None, :]/255
 
         smap = np.squeeze(self.model.predict([img_fine, img_coarse], batch_size=1, verbose=0))
-        #print(smap.shape)
 
-        img = scipy.misc.imread(img_path)
+        if img_path:
+          img = scipy.misc.imread(img_path)
+          h, w = img.shape
+        else:
+          h, w = img.size
+
         smap = (smap - np.min(smap))/((np.max(smap)-np.min(smap)))
-        if smap.ndim == 1:
-          smap = np.resize(smap, (37,50))
-        smap = cv2.resize(smap, (img.shape[1], img.shape[0]), interpolation=cv2.INTER_CUBIC)  
+        smap = cv2.resize(smap, (w, h), interpolation=cv2.INTER_CUBIC)  
         smap = cv2.GaussianBlur(smap, (75, 75), 25, cv2.BORDER_DEFAULT) 
 
         return smap
