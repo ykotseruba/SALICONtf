@@ -182,8 +182,8 @@ class SALICONtf():
               interpolation='nearest'))
 
         else:
-          img_fine = img.copy().resize((600, 800))
-          img_coarse = img.copy().resize((300, 400))
+          img_fine = img.copy().resize((800, 600))
+          img_coarse = img.copy().resize((400, 300))
 
         img_fine -= vgg_mean
         img_coarse -= vgg_mean
@@ -197,7 +197,7 @@ class SALICONtf():
           img = scipy.misc.imread(img_path)
           h, w = img.shape
         else:
-          h, w = img.size
+          w, h = img.size
 
         smap = (smap - np.min(smap))/((np.max(smap)-np.min(smap)))
         smap = cv2.resize(smap, (w, h), interpolation=cv2.INTER_CUBIC)  
