@@ -50,9 +50,9 @@ sh docker_scripts/build
 ```
 
 #### Without Docker
-
+```
 pip3 install -r requirements.txt
-
+```
 
 #### Download datasets and model weights
 
