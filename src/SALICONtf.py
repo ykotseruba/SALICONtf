@@ -1,6 +1,6 @@
 import sys
 from os import listdir, makedirs
-from os.path import isfile, join
+from os.path import isfile, join, abspath, dirname
 import os
 import numpy as np
 import math
@@ -136,10 +136,13 @@ class SALICONtf():
 
         #initialize each vgg16 stream with ImageNet weights
         try:
+          print(abspath(dirname(__file__)))
+          model.load_weights(join(abspath(dirname(__file__)), '../', 'models/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5'), by_name=False)
           model.load_weights('models/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5', by_name=False)
           model = Model(inputs=img_input, outputs=output)
           #plot_model(model, to_file='model.png', show_shapes=True, show_layer_names=True)
         except OSError:
+          print(abspath(dirname(__file__)))
           print("ERROR: VGG weights are not found.\nRun download_vgg_weights.sh in models/ directory")
           sys.exit(-1)
         return model.input, model.output
@@ -195,9 +198,9 @@ class SALICONtf():
 
         if img_path:
           img = scipy.misc.imread(img_path)
-          h, w = img.shape
+          h, w = img.shape[:2]
         else:
-          h, w = img.size
+          h, w = img.size[:2]
 
         smap = (smap - np.min(smap))/((np.max(smap)-np.min(smap)))
         smap = cv2.resize(smap, (w, h), interpolation=cv2.INTER_CUBIC)  

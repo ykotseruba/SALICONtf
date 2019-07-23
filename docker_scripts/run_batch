@@ -72,4 +72,4 @@ fi
 --volume ${input_dir}:${INPUT_VOLUME} \
 --volume `realpath "$output_dir"`:${OUTPUT_VOLUME} \
 --volume `realpath ./models`:${TF_ROOT}/models \
-salicontf python3 src/run_SALICON.py -w ${model_file} -i ${INPUT_VOLUME} -o ${OUTPUT_VOLUME}
+salicontf python3 src/run_SALICONtf.py -w ${model_file} -i ${INPUT_VOLUME} -o ${OUTPUT_VOLUME}

@@ -80,7 +80,7 @@ sh download_mit1003.sh
 ### Running SALICONtf with pretrained weights
 To run a pretrained SALICONtf on an arbitrary image directory use the docker script:
 ```
-sh docker_scripts/run_batch 
+sh docker_scripts/run_batch -i <input_dir> -o <output_dir> [-w <model_weights>]
 ```
 
 Or without docker:
@@ -126,6 +126,6 @@ If you find our work useful in your research, please consider citing:
  -->
 ## Author
 
-* **Yulia Kotseruba**
+* **Iuliia Kotseruba**
 
 Please raise an issue or send email to yulia_k@cse.yorku.ca if there are any issues running the code.
