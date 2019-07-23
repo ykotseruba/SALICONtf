@@ -38,7 +38,7 @@ Below are the results of our model compared to the [official SALICON demo](http:
 
 We tested this setup with NVIDIA Titan X on Ubuntu 16.04 with Python 3.5.
 
-SALICON needs at least 5GB GPU memory, also make sure that you have a recent NVIDIA driver installed (version above 384 at least).
+SALICON needs about 5GB GPU memory, also make sure that you have a recent NVIDIA driver installed (version 384 or above).
 
 #### Docker (stronlgy recommended)
 
@@ -50,9 +50,9 @@ sh docker_scripts/build
 ```
 
 #### Without Docker
-
+```
 pip3 install -r requirements.txt
-
+```
 
 #### Download datasets and model weights
 
