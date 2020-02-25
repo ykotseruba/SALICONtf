@@ -23,7 +23,7 @@ from scipy.misc import imsave
 
 
 def get_data():
-    osie_dir = 'osie_dataset/data/'
+    osie_dir = os.path.dirname(os.path.abspath(__file__))+'/../osie_dataset/data/'
     osie_stimuli = osie_dir + 'stimuli'
     osie_labels = osie_dir + 'fixation_maps'
 
@@ -137,8 +137,7 @@ class SALICONtf():
         #initialize each vgg16 stream with ImageNet weights
         try:
           print(abspath(dirname(__file__)))
-          model.load_weights(join(abspath(dirname(__file__)), '../', 'models/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5'), by_name=False)
-          model.load_weights('models/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5', by_name=False)
+          model.load_weights(os.path.dirname(os.path.abspath(__file__))+'/../models/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5'), by_name=False)
           model = Model(inputs=img_input, outputs=output)
           #plot_model(model, to_file='model.png', show_shapes=True, show_layer_names=True)
         except OSError:
