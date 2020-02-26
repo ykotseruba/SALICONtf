@@ -137,7 +137,7 @@ class SALICONtf():
         #initialize each vgg16 stream with ImageNet weights
         try:
           print(abspath(dirname(__file__)))
-          model.load_weights(os.path.dirname(os.path.abspath(__file__))+'/../models/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5'), by_name=False)
+          model.load_weights(os.path.dirname(os.path.abspath(__file__))+'/../models/vgg16_weights_tf_dim_ordering_tf_kernels_notop.h5', by_name=False)
           model = Model(inputs=img_input, outputs=output)
           #plot_model(model, to_file='model.png', show_shapes=True, show_layer_names=True)
         except OSError:
@@ -196,10 +196,10 @@ class SALICONtf():
         smap = np.squeeze(self.model.predict([img_fine, img_coarse], batch_size=1, verbose=0))
 
         if img_path:
-          img = scipy.misc.imread(img_path)
+          img = cv2.imread(img_path)
           h, w = img.shape[:2]
         else:
-          h, w = img.size[:2]
+          w, h = img.size[:2]
 
         smap = (smap - np.min(smap))/((np.max(smap)-np.min(smap)))
         smap = cv2.resize(smap, (w, h), interpolation=cv2.INTER_CUBIC)  
