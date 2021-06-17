@@ -64,6 +64,8 @@ sh download_pretrained_weights.sh
 sh download_vgg_weights.sh
 ```
 
+Alternative link for pretrained weights is [here](https://www.dropbox.com/s/6yu11ab6g7fy7m1/model_lr0.01_loss_crossentropy.h5?dl=0).
+
 Download OSIE dataset if you want to train SALICON. We provide fixation maps for the OSIE dataset which are generated from human fixation points (```osie_dataset/data/eye/fixations.mat```) using the MATLAB script ```generate_osie_fixation_maps.m```. 
 
 ```
