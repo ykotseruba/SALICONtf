@@ -1,7 +1,7 @@
 matplotlib==3.0.2
 numpy==1.16.1
 scipy==1.2.1
-opencv_python==4.0.0.21
+opencv_python==4.1.1.26
 Keras==2.2.4
 Pillow==8.2.0
 selenium==3.141.0
