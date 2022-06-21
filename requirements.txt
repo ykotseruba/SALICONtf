@@ -1,5 +1,5 @@
 matplotlib==3.0.2
-numpy==1.16.1
+numpy==1.22.0
 scipy==1.2.1
 opencv_python==4.0.0.21
 Keras==2.2.4
